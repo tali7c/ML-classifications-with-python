@@ -6,8 +6,8 @@ Created on Mon Sep  9 12:30:56 2019
 @author: ali
 """
 
-import numpy as np 
-import pandas as pd # read csv file
+import numpy as np  #conda install numpy
+import pandas as pd #conda install pandas # read csv file
 import matplotlib.pyplot as plt #conda install -c anaconda matplotlib
 from sklearn.model_selection import train_test_split #conda install -c anaconda scikit-learn
 from sklearn.preprocessing import StandardScaler
@@ -26,6 +26,7 @@ print(iris_df.head())
 #Defining data and label
 X = iris_df.iloc[:, 1:5]
 y = iris_df.iloc[:, 5]
+
 
 
 
@@ -56,7 +57,7 @@ for idx, cl in enumerate(np.unique(y_train)):
 #Multi Layer Perceptron Classifier
 from sklearn.neural_network import MLPClassifier
 
-mlp = MLPClassifier(hidden_layer_sizes=(100, 100), max_iter=400, alpha=1e-4,
+mlp = MLPClassifier(hidden_layer_sizes=(100, 100), max_iter=1000, alpha=1e-4,
                      solver='sgd', verbose=10, tol=1e-4, random_state=1)
 
 
@@ -65,22 +66,22 @@ print("MLP Training set score: %f" % mlp.score(X_train, y_train))
 print("MLP Test set score: %f" % mlp.score(X_test, y_test))
 
 
-#Support Vector Machine
-from sklearn.svm import SVC
+#K Nearnest Neighbour
+from sklearn.neighbors import KNeighborsClassifier
 
-svmRBF=SVC(kernel='rbf', random_state=0, gamma=.10, C=1.0)
-svmRBF.fit(X_train, y_train)
-print("SVM Training set score: %f" % svmRBF.score(X_train, y_train))
-print("SVM Test set score: %f" % svmRBF.score(X_test, y_test))
+knn=KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+print("knn Training set score: %f" % knn.score(X_train, y_train))
+print("knn Test set score: %f" % knn.score(X_test, y_test))
 
 
-#Random Forest Classifier
-from sklearn.ensemble import RandomForestClassifier
+# #Support Vector Machine
+# from sklearn.svm import SVC
 
-randomForest=RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
-randomForest.fit(X_train, y_train)
-print("randomForest Training set score: %f" % randomForest.score(X_train, y_train))
-print("randomForest Test set score: %f" % randomForest.score(X_test, y_test))
+# svmRBF=SVC(kernel='rbf', random_state=0, gamma=.10, C=1.0)
+# svmRBF.fit(X_train, y_train)
+# print("SVM Training set score: %f" % svmRBF.score(X_train, y_train))
+# print("SVM Test set score: %f" % svmRBF.score(X_test, y_test))
 
 
 
@@ -93,12 +94,24 @@ print("decisionTree Training set score: %f" % decisionTree.score(X_train, y_trai
 print("decisionTree Test set score: %f" % decisionTree.score(X_test, y_test))
 
 
-# print all score
-print("MLP Training set score: %f" % mlp.score(X_train, y_train))
-print("MLP Test set score: %f" % mlp.score(X_test, y_test))
-print("SVM Training set score: %f" % svmRBF.score(X_train, y_train))
-print("SVM Test set score: %f" % svmRBF.score(X_test, y_test))
+#Random Forest Classifier
+from sklearn.ensemble import RandomForestClassifier
+
+randomForest=RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
+randomForest.fit(X_train, y_train)
 print("randomForest Training set score: %f" % randomForest.score(X_train, y_train))
 print("randomForest Test set score: %f" % randomForest.score(X_test, y_test))
-print("decisionTree Training set score: %f" % decisionTree.score(X_train, y_train))
-print("decisionTree Test set score: %f" % decisionTree.score(X_test, y_test))
+
+
+
+# # print all score
+# print("MLP Training set score: %f" % mlp.score(X_train, y_train))
+# print("MLP Test set score: %f" % mlp.score(X_test, y_test))
+# print("KNN Training set score: %f" % knn.score(X_train, y_train))
+# print("KNN Test set score: %f" % knn.score(X_test, y_test))
+# print("SVM Training set score: %f" % svmRBF.score(X_train, y_train))
+# print("SVM Test set score: %f" % svmRBF.score(X_test, y_test))
+# print("randomForest Training set score: %f" % randomForest.score(X_train, y_train))
+# print("randomForest Test set score: %f" % randomForest.score(X_test, y_test))
+# print("decisionTree Training set score: %f" % decisionTree.score(X_train, y_train))
+# print("decisionTree Test set score: %f" % decisionTree.score(X_test, y_test))
