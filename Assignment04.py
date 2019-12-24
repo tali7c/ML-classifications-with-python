@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt #conda install -c anaconda matplotlib
 from sklearn.model_selection import train_test_split #conda install -c anaconda scikit-learn
 from sklearn.preprocessing import StandardScaler
 from matplotlib.colors import ListedColormap
-import matplotlib.pyplot as plt
 
 
 #Reading data from CSV file
@@ -42,7 +41,7 @@ sc.fit(X_train)
 X_train_std = sc.transform(X_train)
 X_test_std = sc.transform(X_test)
 
-
+plt.subplot(2,1,1)
 markers = ('s', 'x', 'o')
 colors = ('red', 'blue', 'lightgreen')
 cmap = ListedColormap(colors[:len(np.unique(y_test))])
@@ -50,7 +49,16 @@ for idx, cl in enumerate(np.unique(y_train)):
     plt.scatter(x=X_train_std[y_train == cl, 0], y=X_train_std[y_train == cl, 1],
                c=cmap(idx), marker=markers[idx], label=cl)
     
+
+plt.subplot(2,1,2)
+markers = ('s', 'x', 'o')
+colors = ('red', 'blue', 'lightgreen')
+cmap = ListedColormap(colors[:len(np.unique(y_test))])
+for idx, cl in enumerate(np.unique(y_train)):
+    plt.scatter(x=X_train_std[y_train == cl, 0], y=X_train_std[y_train == cl, 3],
+               c=cmap(idx), marker=markers[idx], label=cl)
     
+        
     
 
     
@@ -92,6 +100,7 @@ decisionTree=DecisionTreeClassifier(max_depth=5)
 decisionTree.fit(X_train, y_train)
 print("decisionTree Training set score: %f" % decisionTree.score(X_train, y_train))
 print("decisionTree Test set score: %f" % decisionTree.score(X_test, y_test))
+
 
 
 #Random Forest Classifier
