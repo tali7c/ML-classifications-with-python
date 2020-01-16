@@ -77,9 +77,29 @@ plt.subplot(1,3,1) # plt.subplot(rows,cols, id)
 plt.plot(x, np.cos(x), label='cos')
 plt.title('cos(x)')
 
+plt.xlabel('x')
+plt.ylabel('y')
+
+#limit the axis
+plt.xlim([-5,5])
+plt.ylim([0,5])
+
+#show legend
+plt.legend()
+
 plt.subplot(1,3,2)
 plt.plot(x, y, label='sin')
 plt.title('sin(x)')
+
+plt.xlabel('x')
+plt.ylabel('y')
+
+#limit the axis
+plt.xlim([-5,5])
+plt.ylim([0,5])
+
+#show legend
+plt.legend()
 
 plt.subplot(1,3,3)
 plt.plot(x, np.tan(x), label='tan')

@@ -54,8 +54,8 @@ print(newKDD.head())
 
 
 #Defining data and label
-X = newKDD.iloc[:, 0:114]
-y = newKDD.iloc[:, 114]
+X = newKDD.iloc[:, 0:115]
+y = newKDD.iloc[:, 115]
 
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.3, random_state=0)
@@ -138,7 +138,7 @@ print("decisionTree Test set score: %f" % decisionTree.score(X_test, y_test))
 #Random Forest Classifier
 from sklearn.ensemble import RandomForestClassifier
 
-randomForest=RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
+randomForest=RandomForestClassifier(max_depth=5, n_estimators=100, max_features=115)
 randomForest.fit(X_train, y_train)
 print("randomForest Training set score: %f" % randomForest.score(X_train, y_train))
 print("randomForest Test set score: %f" % randomForest.score(X_test, y_test))

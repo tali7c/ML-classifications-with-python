@@ -11,6 +11,7 @@ n=int(inputData)
 
 fact=1
 for item in range(2,n+1,1): # 2 to n number generate with gap 1
+    print(item-1,fact)
     fact *= item
 
 print('The factorial of give numbers %d is %d'%(n, fact))
