@@ -3,9 +3,9 @@
 Created on Sun May 26 20:53:38 2019
 conda create -n EICT -y
 conda activate EICT
-conda install tensorflow=1.13 -y
+conda install tensorflow -y
 conda install -c conda-forge opencv -y
-#pip install opencv-python==3.4.2.17
+#pip install opencv-python
 conda install -c conda-forge python-wget -y
 conda install matplotlib -y
 @author: ALI
@@ -13,11 +13,9 @@ conda install matplotlib -y
 import os
 import numpy as np
 from random import shuffle
-#import necessary libraries
-import tensorflow as tf #conda install tensorflow=1.12 -y
-import matplotlib.pyplot as plt#conda install matplotlib -y
-
-import cv2 #conda install -c conda-forge opencv -y
+import tensorflow as tf
+import matplotlib.pyplot as plt
+import cv2 
 
 rootDir='./Data/Train'
 trainList=[]
