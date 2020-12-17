@@ -1,0 +1,6 @@
+########## Words from publisher #####################################################
+Welcome to TensorFlow Tutorials with the goal to build a strong foundation so we can start building our own projects! I have tried to make these videos very concise, to the point and focused on implementation details in TensorFlow and not on the theoretical concepts (like how do CNNs work etc). Rather I refer you to specific video lectures (mostly by Andrew Ng) for each specific video and with the theory and understanding of the necessary concepts I then show you how to implement it in TensorFlow.
+
+
+https://www.youtube.com/playlist?list=PLhhyoLH6IjfxVOdVC1P1L5z5azs0XjMsb
+#####################################################################################

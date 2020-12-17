@@ -23,8 +23,10 @@ class create_dataset(object):
       self.batch_size=batch_size
     def gen(self,dataList, phase='Train'):
         inps=[]
+        values=[]
         labels=[]
         label_length=[]
+        image_width=[]
         try:
           while 1:
               shuffle(dataList)
@@ -34,18 +36,24 @@ class create_dataset(object):
                   for cc,ch in enumerate(word):
                     chi=self.CharList.index(ch)
                     tmp[cc]=int(chi)
+                    values.append(chi)
                   labels.append(tmp.copy())
-                  label_length.append(len(word))
 
+                  label_length.append(len(word))
+                  
                   tmpimage=np.zeros((32,self.maxWidth),dtype='uint8')             
                   h,w=img.shape[:2]
                   tmpimage[:h,:w]=img
+                  image_width.append( ( (w-4)//2 - 4)//2 - 2)
+
                   inps.append(np.expand_dims(tmpimage,axis=-1))
                   if len(labels)==self.batch_size:            
-                      yield np.asarray(inps,dtype='float32'), np.asarray(labels,dtype='int32'), np.asarray(label_length,dtype='int32')
+                      yield np.asarray(inps,dtype='float32'), np.asarray(values,dtype='int32'), np.asarray(labels,dtype='int32'), np.asarray(label_length,dtype='int32'), np.asarray(image_width,dtype='int32')
                       inps=[]
+                      values=[]
                       labels=[]
                       label_length=[]
+                      image_width=[]
               if phase=='Test':
                   break
         except GeneratorExit:
@@ -60,7 +68,7 @@ traindata=dataset.gen(trainList)
 # %matplotlib inline
 
 validdata=dataset.gen(testList,phase='Test')
-vimages, vclasses, label_length = next( validdata)
+vimages, values,vclasses, label_length,image_width = next( validdata)
 
 # Fill out the subplots with the random images that you defined 
 for i in range(9):
@@ -279,12 +287,13 @@ optimizer = tf.keras.optimizers.Adadelta(learning_rate=learning_rate, rho=0.95, 
 iteration=0
 while iteration<training_iteration:
   iteration = iteration + 1 
-  images, classes, label_length = next(traindata)
+  images, values, classes, label_length, image_width = next(traindata)
        
   images=tf.convert_to_tensor(images)
   images=(images-127.5)/127.5
   classes=tf.convert_to_tensor(classes)
   label_length=tf.convert_to_tensor(label_length)
+  image_width=tf.convert_to_tensor(image_width)
   with tf.GradientTape(watch_accessed_variables=False) as tape:
     tape.watch(varList)
     rnnInp = multilayerNN(images)
@@ -354,7 +363,7 @@ while iteration<training_iteration:
 
 
     shape=tf.shape(y,out_type=tf.dtypes.int32)
-    loss = tf.reduce_mean(tf.nn.ctc_loss(classes, y, label_length, shape[1]*tf.ones_like(label_length), logits_time_major=False))
+    loss = tf.reduce_mean(tf.nn.ctc_loss(classes, y, label_length, image_width, logits_time_major=False))
     
   gradients = tape.gradient(loss, varList)
   optimizer.apply_gradients(zip(gradients, varList))
@@ -369,7 +378,6 @@ while iteration<training_iteration:
 with open(rootDir+'/Trainedweights.pkl', 'wb') as f:
   cPickle.dump([weights,biases], f, pickle.HIGHEST_PROTOCOL)  
 
-
 print(len(testList))
 testdata=dataset.gen(testList,phase='Test')
 
@@ -377,7 +385,7 @@ totalN=0
 totalP=0
 while True:
   try:
-    images, classes, label_length = next(testdata)
+    images, values, classes, label_length, image_width = next(testdata)
   except:
     break
   # print(classes)
@@ -392,22 +400,16 @@ while True:
   # print(len(yencoded))
   # print(log_probability)
   indices=yencoded[0].indices
-  values=tf.cast(yencoded[0].values,dtype='int32')
+  yvalues=tf.cast(yencoded[0].values,dtype='int32')
   dense_shape=yencoded[0].dense_shape
 
   indices0,indices1=tf.unstack(indices,axis=-1)
   # print('indices ',indices)
   print('indices0 ',indices0)
   # print('indices1 ',indices1)
-  print('values ',values)
+  print('values ',values) 
+  print('yvalues ',yvalues)
   # print('dense_shape ',dense_shape)
   
-  parts=tf.dynamic_partition( values, tf.cast(indices0,dtype='int32'), 32)
+  parts=tf.dynamic_partition( yvalues, tf.cast(indices0,dtype='int32'), 32)
   print(parts)
-
-  p=tf.reduce_sum(tf.cast( tf.equal(values,classes), dtype='float32'))
-  totalP = totalP + p
-  totalN = totalN + batch_size
-
-  if iteration % display_step == 0:
-      print("totalN:", '%04d' % (totalN), "totalP:", '%04d' % (totalP), "Accuracy={:.9f}".format(totalP*100/totalN))
